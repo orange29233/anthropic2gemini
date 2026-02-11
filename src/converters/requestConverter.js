@@ -2,17 +2,23 @@
  * Claude API 请求格式 → Gemini API 请求格式转换器
  */
 
-import { DEFAULT_MODEL_MAPPING } from '../config.js';
+import { DEFAULT_GEMINI_MODEL } from '../config.js';
 
 /**
  * 模型名称映射
+ * @param {string} claudeModel - Claude 模型名
+ * @param {string} defaultModel - 默认 Gemini 模型
  */
-export function mapModelName(claudeModel, modelMapping = DEFAULT_MODEL_MAPPING) {
-  // 如果在映射表中，使用映射的模型
-  if (modelMapping[claudeModel]) {
-    return modelMapping[claudeModel];
+export function mapModelName(claudeModel, defaultModel = DEFAULT_GEMINI_MODEL) {
+  // 如果已经是 gemini-* 模型，直接透传
+  if (claudeModel.startsWith('gemini-')) {
+    return claudeModel;
   }
-  // 否则直接使用原模型名（支持直接使用 gemini-* 名称）
+  // 如果是 claude-* 模型，使用默认 Gemini 模型
+  if (claudeModel.startsWith('claude-')) {
+    return defaultModel;
+  }
+  // 其他情况，直接返回原模型名
   return claudeModel;
 }
 
@@ -107,8 +113,8 @@ function convertTools(tools) {
 /**
  * 主转换函数：Claude 请求 → Gemini 请求
  */
-export function convertRequest(claudeRequest, modelMapping = DEFAULT_MODEL_MAPPING) {
-  const geminiModel = mapModelName(claudeRequest.model, modelMapping);
+export function convertRequest(claudeRequest, defaultModel = DEFAULT_GEMINI_MODEL) {
+  const geminiModel = mapModelName(claudeRequest.model, defaultModel);
 
   const geminiRequest = {
     contents: convertMessages(claudeRequest.messages)

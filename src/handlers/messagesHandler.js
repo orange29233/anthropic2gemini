@@ -2,7 +2,7 @@
  * /v1/messages 端点处理器
  */
 
-import { GEMINI_API_BASE } from '../config.js';
+import { GEMINI_API_BASE, DEFAULT_GEMINI_MODEL } from '../config.js';
 import { convertRequest } from '../converters/requestConverter.js';
 import { convertResponse, convertStream } from '../converters/responseConverter.js';
 import { createSSEResponse, readGeminiStream } from '../utils/streaming.js';
@@ -60,6 +60,10 @@ async function handleNonStreaming(geminiModel, geminiRequest, apiKey) {
   }
 
   const geminiResponse = await response.json();
+
+  // 调试日志：输出 Gemini 原始响应
+  logger.info('Gemini 原始响应:', JSON.stringify(geminiResponse));
+
   const claudeResponse = convertResponse(geminiResponse, geminiModel);
 
   logger.debug('响应转换完成:', claudeResponse);
@@ -79,24 +83,31 @@ export async function handleMessages(request, env) {
     // 解析请求
     const claudeRequest = await request.json();
 
-    // 获取 API Key
-    const apiKey = request.headers.get('x-api-key');
+    // 获取 API Key（支持两种方式）
+    let apiKey = request.headers.get('x-api-key');
+
+    // 如果没有 x-api-key，尝试从 Authorization header 获取
+    if (!apiKey) {
+      const authHeader = request.headers.get('authorization');
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        apiKey = authHeader.substring(7); // 移除 "Bearer " 前缀
+      }
+    }
+
     if (!apiKey) {
       return new Response(JSON.stringify({
-        error: { type: 'authentication_error', message: 'Missing x-api-key header' }
+        error: { type: 'authentication_error', message: 'Missing authentication (x-api-key or Authorization header required)' }
       }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }
       });
     }
 
-    // 解析模型映射
-    const modelMapping = env.MODEL_MAPPING
-      ? JSON.parse(env.MODEL_MAPPING)
-      : {};
+    // 获取默认模型（优先使用环境变量，否则使用代码默认值）
+    const defaultModel = env.DEFAULT_MODEL || DEFAULT_GEMINI_MODEL;
 
     // 转换请求
-    const { geminiModel, geminiRequest } = convertRequest(claudeRequest, modelMapping);
+    const { geminiModel, geminiRequest } = convertRequest(claudeRequest, defaultModel);
 
     logger.info('处理请求:', {
       claudeModel: claudeRequest.model,

@@ -47,14 +47,17 @@ export default {
       }
 
       if (path === '/v1/models' && request.method === 'GET') {
-        // 返回支持的模型列表
+        // 返回支持的模型列表（符合 Anthropic API 规范）
+        const models = [
+          { id: 'claude-opus-4-6', created_at: '2025-09-29T00:00:00Z', display_name: 'Claude Opus 4.6', type: 'model' },
+          { id: 'claude-sonnet-4-5-20250929', created_at: '2025-09-29T00:00:00Z', display_name: 'Claude Sonnet 4.5', type: 'model' },
+          { id: 'claude-haiku-4-5-20251001', created_at: '2025-10-01T00:00:00Z', display_name: 'Claude Haiku 4.5', type: 'model' }
+        ];
         return new Response(JSON.stringify({
-          object: 'list',
-          data: [
-            { id: 'claude-sonnet-4.5', object: 'model' },
-            { id: 'claude-opus-4.5', object: 'model' },
-            { id: 'claude-haiku-4.5', object: 'model' }
-          ]
+          data: models,
+          first_id: models[0].id,
+          has_more: false,
+          last_id: models[models.length - 1].id
         }), {
           headers: { 'Content-Type': 'application/json' }
         });

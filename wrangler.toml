@@ -3,10 +3,11 @@ main = "src/index.js"
 compatibility_date = "2024-01-01"
 
 # 环境变量配置
-# MODEL_MAPPING: 模型名映射表（JSON 格式）
-# 示例：{"claude-sonnet-4.5":"gemini-3-flash-preview","claude-opus-4.5":"gemini-3-flash-preview"}
+# DEFAULT_MODEL: 默认 Gemini 模型（所有 Claude 模型都会映射到此模型）
 [vars]
-MODEL_MAPPING = '{"claude-sonnet-4.5":"gemini-3-flash-preview","claude-opus-4.5":"gemini-3-flash-preview","claude-haiku-4.5":"gemini-2.0-flash-lite"}'
+DEFAULT_MODEL = "gemini-3-flash-preview"
 
-# 本地开发环境变量配置（不提交到 git）
+# 本地开发环境变量（不提交到 git）
 # 使用 .dev.vars 文件存储本地开发用的 API Keys
+
+# 自定义域名 wyoyo.qzz.io 需要在 Cloudflare Dashboard 中手动配置 Worker 路由
