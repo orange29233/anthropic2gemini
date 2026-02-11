@@ -1,0 +1,24 @@
+{
+  "name": "anthropic2gemini",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Claude API to Gemini API converter proxy service on Cloudflare Workers",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "claude",
+    "gemini",
+    "api-proxy"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^3.78.0"
+  }
+}

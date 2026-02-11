@@ -1,0 +1,12 @@
+name = "anthropic2gemini"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+# 环境变量配置
+# MODEL_MAPPING: 模型名映射表（JSON 格式）
+# 示例：{"claude-sonnet-4.5":"gemini-3-flash-preview","claude-opus-4.5":"gemini-3-flash-preview"}
+[vars]
+MODEL_MAPPING = '{"claude-sonnet-4.5":"gemini-3-flash-preview","claude-opus-4.5":"gemini-3-flash-preview","claude-haiku-4.5":"gemini-2.0-flash-lite"}'
+
+# 本地开发环境变量配置（不提交到 git）
+# 使用 .dev.vars 文件存储本地开发用的 API Keys

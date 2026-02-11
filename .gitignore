@@ -1,0 +1,12 @@
+# Node
+node_modules/
+package-lock.json
+
+# Wrangler
+.dev.vars
+.wrangler/
+
+# IDE
+.idea/
+.vscode/
+*.iml
