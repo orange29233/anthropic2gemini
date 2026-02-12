@@ -53,13 +53,7 @@ npm install
 
 ### 配置
 
-1. 创建 `.dev.vars` 文件用于本地开发：
-
-```env
-GEMINI_API_KEY=your_gemini_api_key_here
-```
-
-2. 如需修改默认模型，编辑 `wrangler.toml`：
+如需修改默认模型，编辑 `wrangler.toml`：
 
 ```toml
 [vars]
@@ -91,8 +85,6 @@ pnpm deploy
 # 或
 npm run deploy
 ```
-
-首次部署前，需要在 Cloudflare Dashboard 中配置环境变量 `GEMINI_API_KEY`。
 
 ## 使用方法
 
@@ -220,12 +212,17 @@ anthropic2gemini/
   │  (转换后)                │                           │
 ```
 
-## 环境变量
+## 配置说明
 
 | 变量名 | 说明 | 必需 | 默认值 |
 |--------|------|------|--------|
-| `GEMINI_API_KEY` | Google Gemini API 密钥 | 是 | - |
-| `DEFAULT_MODEL` | 默认 Gemini 模型 | 否 | `gemini-3-flash-preview` |
+| `DEFAULT_MODEL` | 默认 Gemini 模型（所有 Claude 模型都会映射到此模型） | 否 | `gemini-3-flash-preview` |
+
+**重要说明**：
+- API Key 需要客户端在请求头中传递，支持两种方式：
+  - `x-api-key: your-gemini-api-key`
+  - `Authorization: Bearer your-gemini-api-key`
+- 不需要在服务端配置环境变量，API Key 由客户端自行管理
 
 ## 支持的 Gemini 模型
 
